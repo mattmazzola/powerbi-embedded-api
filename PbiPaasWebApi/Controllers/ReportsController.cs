@@ -34,7 +34,7 @@ namespace PbiPaasWebApi.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri]bool includeTokens = false)
         {
-            var devToken = PowerBIToken.CreateDevToken(this.workspaceCollection, this.workspaceId);
+            var devToken = PowerBIToken.CreateDevToken(this.workspaceCollection, this.workspaceId.ToString());
             using (var client = this.CreatePowerBIClient(devToken))
             {
                 var reportsResponse = await client.Reports.GetReportsAsync(this.workspaceCollection, this.workspaceId.ToString());
@@ -44,7 +44,7 @@ namespace PbiPaasWebApi.Controllers
                         string accessToken = null;
                         if(includeTokens)
                         {
-                            var embedToken = PowerBIToken.CreateReportEmbedToken(this.workspaceCollection, this.workspaceId, Guid.Parse(report.Id));
+                            var embedToken = PowerBIToken.CreateReportEmbedToken(this.workspaceCollection, this.workspaceId.ToString(), Guid.Parse(report.Id).ToString());
                             accessToken = embedToken.Generate(this.signingKey);
                         }
 
@@ -60,7 +60,7 @@ namespace PbiPaasWebApi.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Get(string id)
         {
-            var devToken = PowerBIToken.CreateDevToken(this.workspaceCollection, this.workspaceId);
+            var devToken = PowerBIToken.CreateDevToken(this.workspaceCollection, this.workspaceId.ToString());
             using (var client = this.CreatePowerBIClient(devToken))
             {
                 var reportsResponse = await client.Reports.GetReportsAsync(this.workspaceCollection, this.workspaceId.ToString());
@@ -70,7 +70,7 @@ namespace PbiPaasWebApi.Controllers
                     return BadRequest($"No reports were found matching the id: {id}");
                 }
 
-                var embedToken = PowerBIToken.CreateReportEmbedToken(this.workspaceCollection, this.workspaceId, Guid.Parse(report.Id));
+                var embedToken = PowerBIToken.CreateReportEmbedToken(this.workspaceCollection, this.workspaceId.ToString(), Guid.Parse(report.Id).ToString());
                 var accessToken = embedToken.Generate(this.signingKey);
                 var reportWithToken = new ReportWithToken(report, accessToken);
 
@@ -86,7 +86,7 @@ namespace PbiPaasWebApi.Controllers
                 return Ok(Enumerable.Empty<ReportWithToken>());
             }
 
-            var devToken = PowerBIToken.CreateDevToken(this.workspaceCollection, this.workspaceId);
+            var devToken = PowerBIToken.CreateDevToken(this.workspaceCollection, this.workspaceId.ToString());
             using (var client = this.CreatePowerBIClient(devToken))
             {
                 var reportsResponse = await client.Reports.GetReportsAsync(this.workspaceCollection, this.workspaceId.ToString());
@@ -98,7 +98,7 @@ namespace PbiPaasWebApi.Controllers
                          string accessToken = null;
                          if (includeTokens)
                          {
-                             var embedToken = PowerBIToken.CreateReportEmbedToken(this.workspaceCollection, this.workspaceId, Guid.Parse(report.Id));
+                             var embedToken = PowerBIToken.CreateReportEmbedToken(this.workspaceCollection, this.workspaceId.ToString(), Guid.Parse(report.Id).ToString());
                              accessToken = embedToken.Generate(this.signingKey);
                          }
 
